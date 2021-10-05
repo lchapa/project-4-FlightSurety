@@ -4,28 +4,46 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-     <title>FlightSurety</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <title>FlightSurety</title>
+	<link href="css/bootstrap.min.css" rel="stylesheet">
 </head>
 
-<body>
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-        <a class="navbar-brand" href="#">FlightSurety</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault"
-            aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </nav>
+<body class="bg-light">
 
-    <main class="container">
+<div class="container">
+  	<main>
+  		<div class="row g-5">
+  			<div class="col-md-7 col-lg-8">
+        		<h4 class="mb-3" id="display-wrapper">B</h4>
 
-        <div id="display-wrapper" class="top-20">
-        </div>
-        <div class="row top-20">
-            <label class="form">Flight</label> <input type="text" id="flight-number" value="vuelo101"> <btn class="btn btn-primary" id="submit-oracle">Submit to Oracles</btn>
-        </div>
-    </main>
+		        <div class="row g-3">
+            		<div class="col-sm-6">
+              			<label for="flight" class="form-label">Flight</label>
+              			<input type="text" class="form-control" id="flightId" placeholder="" value="" required>
+              			<div class="invalid-feedback">
+                			Valid flight.
+              			</div>
+            		</div>
+            		<div class="col-sm-6">
+              			<label for="flight" class="form-label" id="flightStatusLbl">Status</label>
+            		</div>
+  				</div>
+  	          	<hr class="my-4">
+
+          		<button class="w-100 btn btn-primary btn-lg" id="flightStatusBtn">Get Checkout status</button>
+  				
+  			</div>
+  		</div>
+	</main>
+</div>
+
 </body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="web3.min.js"></script>
+<script src="truffle-contract.js"></script>
+
+<script src="contract.js"></script>
+
 
 </html>

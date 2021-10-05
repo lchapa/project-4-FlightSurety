@@ -3,6 +3,7 @@ import Config from './config.json';
 import Web3 from 'web3';
 import express from 'express';
 
+console.log('INITIALIZING');
 
 let config = Config['localhost'];
 let web3 = new Web3(new Web3.providers.WebsocketProvider(config.url.replace('http', 'ws')));
