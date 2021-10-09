@@ -363,8 +363,9 @@ contract FlightSuretyData {
 		insuranceExist(_insuranceId)
 		insuranceValid(_insuranceId)
     {
-    	Insurance memory insurance = insurances[_insuranceId];
-    	passengerBalance[insurance.passenger] = passengerBalance[insurance.passenger].add(amount);
+    	Insurance storage insurance = insurances[_insuranceId];
+    	uint256 summed = insurance.payment.add(amount);
+    	passengerBalance[insurance.passenger] = passengerBalance[insurance.passenger].add(summed);
 	    insurances[_insuranceId].status = InsuranceStatus.Applied;
     }
 

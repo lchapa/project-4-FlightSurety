@@ -233,6 +233,20 @@ contract('Flight Surety Tests', async (accounts) => {
 			console.log("Error: " + e);
 			assert.isNotOk('Flights registered without issues');
 		}
+		
+		try {
+			console.log('FLIGHTS: ' + constants.flightIds);
+			for(let flightId of constants.flightIds) {
+				console.log('FLIGHT_ID: ' + flightId);
+				let result = await config.flightSuretyApp.getFlightInfo(flightId);
+				console.log(JSON.stringify(result));
+			}			
+		} catch(e) {
+			console.log("Error: " + e);
+			assert.isNotOk('Flights registered can be consulted');
+			
+		}
+		
 	});
 	
 	it('(passengers) buy insurance and pay up to 1 ether per flight', async() => {

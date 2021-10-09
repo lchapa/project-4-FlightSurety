@@ -308,13 +308,20 @@ contract FlightSuretyApp {
 		emit FlightRegistered(flightId);	
     }
     
+    function getFlightInfo(uint256 flightId) external view requireIsOperational
+    	returns(bool isRegistered_, uint8 statusCode_, uint256 updatedTimestamp_, address airline_, string memory flight_)
+    {
+    	return model.getFlightById(flightId);
+	}
+    
+    
     function buyInsurance(uint256 _flightId) external payable requireIsOperational
     	flightRegistered(_flightId)
     	flightStatusToInsurance(_flightId)
     	verifyMaxInsurancePrice    	
     {
     	payable(address(model)).transfer(insuranceMaxPrice);
-    	model.createInsurance(msg.sender, _flightId);
+    	model.createInsurance(msg.sender, _flightId, insuranceMaxPrice);
     	emit InsuranceValid(msg.sender, _flightId);    	
     }
     
@@ -392,20 +399,24 @@ contract FlightSuretyApp {
     // Oracles track this and if they have a matching index
     // they fetch data and submit a response
     event OracleRequest(uint8 index, address airline, string flight, uint256 timestamp);
+    
+    event OracleRegistered(address oracle, uint8[3] indexes);
 
 
     // Register an oracle with the contract
     function registerOracle()
         external
+        
         payable
     {
         // Require registration fee
-        require(msg.value >= REGISTRATION_FEE, "Registration fee is required");
+        require(msg.value >= REGISTRATION_FEE, "Registration fee required");
         uint8[3] memory indexes = generateIndexes(msg.sender);
-        oracles[msg.sender] = Oracle({
-                                        isRegistered: true,
-                                        indexes: indexes
-                                    });
+        payable(address(model)).transfer(msg.value);
+        Oracle storage oracle = oracles[msg.sender];
+        oracle.isRegistered = true;
+        oracle.indexes = indexes;
+		emit OracleRegistered(msg.sender, indexes);
     }
 
     function getMyIndexes()
@@ -460,9 +471,9 @@ contract FlightSuretyApp {
     // Returns array of three non-duplicating integers from 0-9
     function generateIndexes(address account)
 	    internal
-	    returns(uint8[3] memory indexes)
+	    returns(uint8[3] memory)
     {
-        //uint8[3] memory indexes;
+        uint8[3] memory indexes;
         indexes[0] = getRandomIndex(account);
         
         indexes[1] = indexes[0];
@@ -509,7 +520,7 @@ interface IFlightSuretyData{
 	 
 	function createFlight(address _airline, string memory _flight, uint256 _timestamp, uint8 _statusCode) external returns(uint256 flightId);
 	function getFlightById(uint256 _flightId) external view returns(bool isRegistered_, uint8 statusCode_, uint256 updatedTimestamp_, address airline_, string memory flight_);	
-	function createInsurance(address passenger, uint256 flightId) external;
+	function createInsurance(address passenger, uint256 flightId, uint256 _payment) external;
 	function getFlightId(address _airline, string memory _flight, uint256 _timestamp) external view returns(uint256 flightId_);
 	function setFlightStatus(uint256 flightId, uint8 statusCode) external;
 	
